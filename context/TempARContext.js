@@ -1,7 +1,16 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
-import { Alert } from 'react-native';
+import { Alert, Platform } from 'react-native';
 import * as Location from 'expo-location';
 import { Camera } from 'expo-camera';
+
+// Import UI components for use in AR
+let ui;
+try {
+  ui = require('../components/ui');
+} catch (error) {
+  console.warn("TempARContext: Failed to import UI components:", error.message);
+  ui = {};
+}
 
 // Create context for temporary AR functionality
 const TempARContext = createContext(null);
@@ -31,6 +40,24 @@ export const TempARProvider = ({ children }) => {
   // Request necessary permissions
   const requestPermissions = async () => {
     try {
+      // For web platform, mock the permissions and location
+      if (Platform.OS === 'web') {
+        setHasPermission(true);
+        setLocation({
+          coords: {
+            latitude: 37.7749,
+            longitude: -122.4194,
+            altitude: 0,
+            accuracy: 5,
+            altitudeAccuracy: 5,
+            heading: 0,
+            speed: 0
+          },
+          timestamp: Date.now()
+        });
+        return true;
+      }
+      
       // Request camera permission
       const { status: cameraStatus } = await Camera.requestCameraPermissionsAsync();
       
@@ -132,6 +159,61 @@ export const TempARProvider = ({ children }) => {
 
   // Get nearby phillboard anchors
   const getNearbyPhillboards = async (radiusInMeters = 100) => {
+    // For web environment, always return sample data
+    if (Platform.OS === 'web') {
+      const sampleLatitude = location?.coords.latitude || 37.7749;
+      const sampleLongitude = location?.coords.longitude || -122.4194;
+      
+      return [
+        {
+          id: 'web_sample_1',
+          latitude: sampleLatitude + (Math.random() - 0.5) * 0.02,
+          longitude: sampleLongitude + (Math.random() - 0.5) * 0.02,
+          title: 'Demo Phillboard 1',
+          message: 'This is a web-demo phillboard',
+          template: 'standard',
+          points: 100,
+          visitors: 25,
+          likes: 12,
+          type: 'regular',
+          createdAt: new Date().toISOString(),
+          createdBy: 'web_user',
+          distance: 150
+        },
+        {
+          id: 'web_sample_2',
+          latitude: sampleLatitude + (Math.random() - 0.5) * 0.02,
+          longitude: sampleLongitude + (Math.random() - 0.5) * 0.02,
+          title: 'Challenge Phillboard',
+          message: 'Complete this web challenge!',
+          template: 'challenge',
+          points: 150,
+          visitors: 15,
+          likes: 8,
+          type: 'challenge',
+          createdAt: new Date().toISOString(),
+          createdBy: 'web_user',
+          distance: 320
+        },
+        {
+          id: 'web_sample_3',
+          latitude: sampleLatitude + (Math.random() - 0.5) * 0.02,
+          longitude: sampleLongitude + (Math.random() - 0.5) * 0.02,
+          title: 'Bonus Phillboard',
+          message: 'You found a bonus board!',
+          template: 'bonus',
+          points: 75,
+          visitors: 8,
+          likes: 4,
+          type: 'bonus',
+          createdAt: new Date().toISOString(),
+          createdBy: 'web_user',
+          distance: 210
+        }
+      ];
+    }
+    
+    // For native platforms
     if (!isInitialized || !location) return [];
     
     try {
@@ -178,14 +260,14 @@ export const TempARProvider = ({ children }) => {
   // Calculate distance between two points in meters
   const calculateDistance = (lat1, lon1, lat2, lon2) => {
     const R = 6371e3; // Earth radius in meters
-    const φ1 = lat1 * Math.PI/180;
-    const φ2 = lat2 * Math.PI/180;
-    const Δφ = (lat2-lat1) * Math.PI/180;
-    const Δλ = (lon2-lon1) * Math.PI/180;
+    const phi1 = lat1 * Math.PI/180;
+    const phi2 = lat2 * Math.PI/180;
+    const deltaPhi = (lat2-lat1) * Math.PI/180;
+    const deltaLambda = (lon2-lon1) * Math.PI/180;
 
-    const a = Math.sin(Δφ/2) * Math.sin(Δφ/2) +
-              Math.cos(φ1) * Math.cos(φ2) *
-              Math.sin(Δλ/2) * Math.sin(Δλ/2);
+    const a = Math.sin(deltaPhi/2) * Math.sin(deltaPhi/2) +
+              Math.cos(phi1) * Math.cos(phi2) *
+              Math.sin(deltaLambda/2) * Math.sin(deltaLambda/2);
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
 
     return R * c;

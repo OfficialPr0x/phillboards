@@ -5,8 +5,26 @@ import * as Location from 'expo-location';
 import { MaterialIcons, FontAwesome } from '@expo/vector-icons';
 import { useTempAR } from '../context/TempARContext';
 
-const WorldMapScreen = ({ userPoints, setUserPoints }) => {
-  const { location, getNearbyPhillboards, isInitialized, isInitializing, initializationError, retryInitialization } = useTempAR();
+// Import UI components
+import { Button, Card } from '../components/ui';
+
+const WorldMapScreen = (props) => {
+  const { userPoints, setUserPoints } = props;
+  const { location: tempLocation, getNearbyPhillboards, isInitialized, isInitializing, initializationError, retryInitialization } = useTempAR();
+  // Provide a default location when location is null (for web environment)
+  const location = tempLocation || {
+    coords: {
+      latitude: 37.7749,
+      longitude: -122.4194,
+      altitude: 0,
+      accuracy: 5,
+      altitudeAccuracy: 5,
+      heading: 0,
+      speed: 0
+    },
+    timestamp: Date.now()
+  };
+  
   const [errorMsg, setErrorMsg] = useState(null);
   const [phillboards, setPhillboards] = useState([]);
   const [vpsLocations, setVpsLocations] = useState([]);
@@ -55,17 +73,16 @@ const WorldMapScreen = ({ userPoints, setUserPoints }) => {
 
   // Fetch Phillboards and VPS locations when location changes
   useEffect(() => {
-    if (location) {
-      fetchNearbyPhillboards();
-      fetchVpsLocations();
-    } else {
+    fetchNearbyPhillboards();
+    fetchVpsLocations();
+    if (!tempLocation) {
       setIsLoading(false);
     }
-  }, [location]);
+  }, [tempLocation]);
 
   // Watch for initialization status changes
   useEffect(() => {
-    if (!isInitializing && location) {
+    if (!isInitializing) {
       fetchNearbyPhillboards();
     }
   }, [isInitializing, isInitialized]);
@@ -74,14 +91,22 @@ const WorldMapScreen = ({ userPoints, setUserPoints }) => {
   const fetchNearbyPhillboards = async () => {
     setIsLoading(true);
     try {
-      const nearbyPhillboards = await getNearbyPhillboards(500); // 500 meters radius
-      
-      // If no real phillboards yet, add some sample ones for demo
-      if (nearbyPhillboards.length === 0) {
+      // Check if getNearbyPhillboards exists before calling it
+      if (typeof getNearbyPhillboards === 'function') {
+        const nearbyPhillboards = await getNearbyPhillboards(500); // 500 meters radius
+        
+        // If no real phillboards yet, add some sample ones for demo
+        if (nearbyPhillboards.length === 0) {
+          const samplePhillboards = generateSamplePhillboards();
+          setPhillboards(samplePhillboards);
+        } else {
+          setPhillboards(nearbyPhillboards);
+        }
+      } else {
+        // If getNearbyPhillboards is not available, use sample data
+        console.warn('getNearbyPhillboards is not a function, using sample data');
         const samplePhillboards = generateSamplePhillboards();
         setPhillboards(samplePhillboards);
-      } else {
-        setPhillboards(nearbyPhillboards);
       }
     } catch (error) {
       console.error('Error fetching phillboards:', error);

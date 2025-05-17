@@ -7,6 +7,9 @@ import AROverlay from '../components/ui/AROverlay';
 import BillboardCreator from '../components/ui/BillboardCreator';
 import Billboard from '../components/ui/Billboard';
 
+// Import UI components
+import { Button, Input, Modal } from '../components/ui';
+
 const { width, height } = Dimensions.get('window');
 
 const TempPlacePhillboardScreen = ({ navigation, userPoints = 1250, setUserPoints = () => {} }) => {

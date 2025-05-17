@@ -4,8 +4,11 @@
     "slug": "phillboards",
     "version": "1.0.0",
     "orientation": "portrait",
+    "icon": "./assets/images/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
+      "image": "./assets/images/splash.png",
+      "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
     "assetBundlePatterns": [
@@ -21,6 +24,7 @@
     },
     "android": {
       "adaptiveIcon": {
+        "foregroundImage": "./assets/images/icon.png",
         "backgroundColor": "#ffffff"
       },
       "package": "com.phillboards.app",
@@ -31,13 +35,11 @@
       ],
       "config": {
         "googleMaps": {
-          "apiKey": "YOUR_GOOGLE_MAPS_API_KEY"
+          "apiKey": "AIzaSyDmXngxHEMT_AfVai6Q-REX3wVJO_tDjbU"
         }
       }
     },
-    "web": {
-      "favicon": "./assets/favicon.png"
-    },
+    "web": {},
     "plugins": [
       [
         "expo-camera",
@@ -50,6 +52,15 @@
         {
           "locationAlwaysAndWhenInUsePermission": "Allow Phillboards to use your location to place and find phillboards near you."
         }
+      ],
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#1E88E5",
+          "image": "./assets/images/splash.png",
+          "resizeMode": "contain",
+          "imageWidth": 200
+        }
       ]
     ],
     "extra": {
@@ -58,4 +69,4 @@
       }
     }
   }
-} 
+}

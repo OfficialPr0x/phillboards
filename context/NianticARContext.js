@@ -1,5 +1,14 @@
 import React, { createContext, useContext } from 'react';
 
+// Import UI components for use in AR
+let ui;
+try {
+  ui = require('../components/ui');
+} catch (error) {
+  console.warn("NianticARContext: Failed to import UI components:", error.message);
+  ui = {};
+}
+
 // Create a mock context for Niantic AR
 const NianticARContext = createContext(null);
 

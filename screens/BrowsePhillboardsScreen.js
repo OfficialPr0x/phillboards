@@ -3,6 +3,9 @@ import { View, StyleSheet, Text, TextInput, FlatList, TouchableOpacity, Image, A
 import { MaterialIcons, FontAwesome } from '@expo/vector-icons';
 import { useNianticAR } from '../context/NianticARContext';
 
+// Import UI components
+import { Button, Card, Badge } from '../components/ui';
+
 const BrowsePhillboardsScreen = () => {
   const { getNearbyPhillboards, updatePhillboard } = useNianticAR();
   const [phillboards, setPhillboards] = useState([]);

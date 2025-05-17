@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#FF5E3A">
+    <meta name="description" content="Phillboards - Discover and create AR content in the real world">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
+    <!-- Favicon and app icons -->
+    <!-- favicon will be injected by HtmlWebpackPlugin -->
+    <link rel="apple-touch-icon" sizes="180x180" href="<%= appleIcon %>">
+    
+    <!-- Open Graph tags for social sharing -->
+    <meta property="og:title" content="Phillboards">
+    <meta property="og:description" content="Discover and create AR content in the real world">
+    <meta property="og:image" content="<%= ogImage %>">
+    <meta property="og:url" content="https://phillboards.app">
+    
+    <!-- Preconnect to required domains -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <title>Phillboards</title>
+
+    <style>
+      /* Critical CSS for initial rendering */
+      * {
+        box-sizing: border-box;
+      }
+      
+      html, body, #root {
+        height: 100%;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        background-color: #FFFFFF;
+      }
+      
+      #root {
+        display: flex;
+        flex-direction: column;
+      }
+      
+      .loading-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        width: 100%;
+        background-color: #FFFFFF;
+      }
+      
+      .loading-logo {
+        width: 120px;
+        height: 120px;
+        margin-bottom: 24px;
+      }
+      
+      .loading-spinner {
+        width: 40px;
+        height: 40px;
+        border: 4px solid rgba(255, 94, 58, 0.2);
+        border-top-color: #FF5E3A;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+      
+      .loading-text {
+        margin-top: 16px;
+        font-size: 16px;
+        color: #333333;
+        font-weight: 500;
+      }
+      
+      @keyframes spin {
+        to { transform: rotate(360deg); }
+      }
+      
+      /* Custom scrollbar styles */
+      ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+      }
+      
+      ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+      }
+      
+      ::-webkit-scrollbar-thumb {
+        background: #888;
+        border-radius: 3px;
+      }
+      
+      ::-webkit-scrollbar-thumb:hover {
+        background: #555;
+      }
+    </style>
+
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline' 'unsafe-eval';">
+  </head>
+  <body>
+    <div id="root">
+      <!-- Loading state that will show before React loads -->
+      <div class="loading-container">
+        <img src="favicon.ico" alt="Phillboards Logo" class="loading-logo" />
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Loading Phillboards...</div>
+      </div>
+    </div>
+    <script>
+      // Prevent cryptocurrency wallet extension conflicts
+      if (window.ethereum === undefined) {
+        Object.defineProperty(window, 'ethereum', {
+          value: null,
+          configurable: true,
+          writable: true
+        });
+      }
+      
+      if (window.solana === undefined) {
+        Object.defineProperty(window, 'solana', {
+          value: null,
+          configurable: true,
+          writable: true
+        });
+      }
+    </script>
+    <!-- bundle.js will be injected by HtmlWebpackPlugin -->
+  </body>
+</html>
